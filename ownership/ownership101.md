@@ -1,5 +1,7 @@
 Ownership 101
 ---
+Author: [Ehsan M. Kermani](https://ehsanmkermani.com/)
+
 
 * The biggest new feature of Rust
 * Compile time check
