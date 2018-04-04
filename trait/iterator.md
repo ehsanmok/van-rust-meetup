@@ -7,7 +7,7 @@ Date: April 4th, 2018
 ### Quick recap of traits
 
 * Defining *shared behaviour* (interface).
- - Examples: `Clone, Copy, Debug, Display, Drop` and `Iterator`
+ * Examples: `Clone, Copy, Debug, Display, Drop` and `Iterator`
 * For trivial constructs compiler can impl them for us with `#[derive(...)]`. Iterating is *not* trivial!
 
 ```rust
@@ -32,9 +32,9 @@ pub trait Default {
 }
 ```
 * Type bounds over generics tells compiler to check for defined behaviours (impled traits)
- - `struct Int<T: Copy>(T)`
+ * `struct Int<T: Copy>(T)`
 * *Associate types*: placeholder for trait definition.
- - Example, `type Item` in `Iterator` or `type Output` in `Add`
+ * Example, `type Item` in `Iterator` or `type Output` in `Add`
 
  ```Rust
 trait Add<RHS=Self> {
@@ -45,7 +45,7 @@ trait Add<RHS=Self> {
 
 * *Default generic type parameters and operator overloading*: `<PlaceholderType=ConcreteType>`.
 
- - Example, `Add<RHS=Self>`
+ * Example, `Add<RHS=Self>`
 
 [Exercise](https://play.rust-lang.org/?gist=2fe72ad5dcce27ae13a4c61aa14c7097&version=stable):
 Let's impl `Add` behaviour for `i32`; i.e. `1 + "2" = 3`
@@ -64,14 +64,14 @@ Let's impl `Add` behaviour for `i32`; i.e. `1 + "2" = 3`
 ### Polymorphism
 
 * Trait static dispatch: (impled a trait for multiple types)
- - Callee is known at compile time
- - Monomorphisation
- - [Example from the book](https://play.rust-lang.org/?gist=fa9a2dbd70cb6c0a0be98a0bb6377c59&version=stable)
+ * Callee is known at compile time
+ * Monomorphisation
+ * [Example from the book](https://play.rust-lang.org/?gist=fa9a2dbd70cb6c0a0be98a0bb6377c59&version=stable)
 
 * Dynamic dispatch:
- - Runtime
- - Mechanism is through `Trait object` i.e. a *trait behind a pointer* (type erasure). Stores any value that impl the trait.
- - [Example cont.](https://play.rust-lang.org/?gist=2b0ad49fe55654dda3ef7e54ec6ce658&version=stable)
+ * Runtime
+ * Mechanism is through `Trait object` i.e. a *trait behind a pointer* (type erasure). Stores any value that impl the trait.
+ * [Example cont.](https://play.rust-lang.org/?gist=2b0ad49fe55654dda3ef7e54ec6ce658&version=stable)
 
 Needs a separate presentation!
 
@@ -105,7 +105,7 @@ for elt in v {
 }
 ```
 * We haven't called anything on `v`. How did `for` make `v` into an iterator?
- - *Answer*: `IntoIterator` trait with `into_iter()` method. `for` loop invokes `IntoIterator::into_iter(v)` for us (syntatic sugar).
+ * *Answer*: `IntoIterator` trait with `into_iter()` method. `for` loop invokes `IntoIterator::into_iter(v)` for us (syntatic sugar).
 
 * Converting from an iterator to a collection with `FromIterator` trait with one method `from_iter`:
 
@@ -133,7 +133,7 @@ where
 ```
 
 * Associated `type IntoIter` is responsible for holding the state.
- - Example [`vec::IntoIter` struct](https://doc.rust-lang.org/std/vec/struct.IntoIter.html)
+ * Example [`vec::IntoIter` struct](https://doc.rust-lang.org/std/vec/struct.IntoIter.html)
 * std: [`impl<I: Iterator> IntoIterator for I`](https://doc.rust-lang.org/src/core/iter/traits.rs.html#252) means all `Iterator`s are `IntoIterator`s!
 
  1. Exactly for this reason impling `Iterator` trait for a type, can use it with `for` loop
