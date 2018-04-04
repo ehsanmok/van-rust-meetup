@@ -32,31 +32,29 @@ pub trait Default {
 }
 ```
 * Type bounds over generics tells compiler to check for defined behaviours (impled traits)
- * `struct Int<T: Copy>(T)`
+    - `struct Int<T: Copy>(T)`
 * *Associate types*: placeholder for trait definition.
- * Example, `type Item` in `Iterator` or `type Output` in `Add`
-
- ```Rust
-trait Add<RHS=Self> {
-    type Output; // associated type
-    fn add(self, rhs: RHS) -> Self::Output; // associated function
-}
-```
+    - Example, `type Item` in `Iterator` or `type Output` in `Add`
+    ```Rust
+    trait Add<RHS=Self> {
+        type Output; // associated type
+        fn add(self, rhs: RHS) -> Self::Output; // associated function
+    }
+    ```
 
 * *Default generic type parameters and operator overloading*: `<PlaceholderType=ConcreteType>`.
-
- * Example, `Add<RHS=Self>`
+    - Example, `Add<RHS=Self>`
 
 [Exercise](https://play.rust-lang.org/?gist=2fe72ad5dcce27ae13a4c61aa14c7097&version=stable):
 Let's impl `Add` behaviour for `i32`; i.e. `1 + "2" = 3`
 ([Solution](https://play.rust-lang.org/?gist=5b97709bf20cd63876ddbe8f3414ce99&version=stable))
 
 * Sub-behaviour (customized): `traits: super_trait`. Example
- - `pub trait Copy: Clone {}`
- - `pub trait Eq: PartialEq<Self> { ... }`
- - `pub trait Ord: Eq + PartialOrd<Self> { ... }`
- - `pub trait FnMut<Args>: FnOnce<Args> { ... }`
- - `pub trait Fn<Args>: FnMut<Args> { ... }`
+    - `pub trait Copy: Clone {}`
+    - `pub trait Eq: PartialEq<Self> { ... }`
+    - `pub trait Ord: Eq + PartialOrd<Self> { ... }`
+    - `pub trait FnMut<Args>: FnOnce<Args> { ... }`
+    - `pub trait Fn<Args>: FnMut<Args> { ... }`
 
 * [*Orphan rule*](http://smallcultfollowing.com/babysteps/blog/2015/01/14/little-orphan-impls/#the-covered-rule): allowed to implement a trait on a type as long as **either** the trait **or** the type are local to our crate.
  - Above exercise; needed `Int` wrapper around `i32` to make it local to our crate (*newtype pattern*)
@@ -64,14 +62,14 @@ Let's impl `Add` behaviour for `i32`; i.e. `1 + "2" = 3`
 ### Polymorphism
 
 * Trait static dispatch: (impled a trait for multiple types)
- * Callee is known at compile time
- * Monomorphisation
- * [Example from the book](https://play.rust-lang.org/?gist=fa9a2dbd70cb6c0a0be98a0bb6377c59&version=stable)
+    - Callee is known at compile time
+    - Monomorphisation
+    - [Example from the book](https://play.rust-lang.org/?gist=fa9a2dbd70cb6c0a0be98a0bb6377c59&version=stable)
 
 * Dynamic dispatch:
- * Runtime
- * Mechanism is through `Trait object` i.e. a *trait behind a pointer* (type erasure). Stores any value that impl the trait.
- * [Example cont.](https://play.rust-lang.org/?gist=2b0ad49fe55654dda3ef7e54ec6ce658&version=stable)
+    - Runtime
+    - Mechanism is through `Trait object` i.e. a *trait behind a pointer* (type erasure). Stores any value that impl the trait.
+    - [Example cont.](https://play.rust-lang.org/?gist=2b0ad49fe55654dda3ef7e54ec6ce658&version=stable)
 
 Needs a separate presentation!
 
@@ -105,7 +103,7 @@ for elt in v {
 }
 ```
 * We haven't called anything on `v`. How did `for` make `v` into an iterator?
- * *Answer*: `IntoIterator` trait with `into_iter()` method. `for` loop invokes `IntoIterator::into_iter(v)` for us (syntatic sugar).
+    - *Answer*: `IntoIterator` trait with `into_iter()` method. `for` loop invokes `IntoIterator::into_iter(v)` for us (syntatic sugar).
 
 * Converting from an iterator to a collection with `FromIterator` trait with one method `from_iter`:
 
@@ -133,8 +131,8 @@ where
 ```
 
 * Associated `type IntoIter` is responsible for holding the state.
- * Example [`vec::IntoIter` struct](https://doc.rust-lang.org/std/vec/struct.IntoIter.html)
-* std: [`impl<I: Iterator> IntoIterator for I`](https://doc.rust-lang.org/src/core/iter/traits.rs.html#252) means all `Iterator`s are `IntoIterator`s!
+    - Example [`vec::IntoIter` struct](https://doc.rust-lang.org/std/vec/struct.IntoIter.html)
+* std lib: [`impl<I: Iterator> IntoIterator for I`](https://doc.rust-lang.org/src/core/iter/traits.rs.html#252) means all `Iterator`s are `IntoIterator`s!
 
  1. Exactly for this reason impling `Iterator` trait for a type, can use it with `for` loop
  2. For a collection with impled `IntoIterator` allows us to use it with `for` loop
