@@ -93,9 +93,9 @@ pub trait Iterator {
  1. A `struct State` holding iterator's state
  2. `impl Iterator for State`
 
-[Exercise](https://play.rust-lang.org/?gist=f383f197692e235ec51ba0ade20e2387&version=stable): create empty iterator. An iterator returning nothing ([Solution](https://play.rust-lang.org/?gist=adf9b7360ee3ee008ee6840401172598&version=stable))
+[Exercise](https://play.rust-lang.org/?gist=d7ea3e8f3c03e6c19f6fc37ea8eb99f1&version=stable): create empty iterator. An iterator returning nothing ([Solution](https://play.rust-lang.org/?gist=adf9b7360ee3ee008ee6840401172598&version=stable))
 
-[Exercise](): create `repeat` function ([Solution]())
+[Exercise](https://play.rust-lang.org/?gist=6888e2c75ef6a4ec08e61c6ab3d752a4&version=stable): create `repeat` function ([Solution](https://play.rust-lang.org/?gist=a1679f3bb0a1bb3fb7440a0369676d6d&version=stable))
 
 * `for elt in iterator`
 ```Rust
@@ -105,7 +105,7 @@ for elt in v {
 }
 ```
 * We haven't called anything on `v`. How did `for` make `v` into an iterator?
-*Answer*: `IntoIterator` trait with `into_iter()` method. `for` loop invokes `IntoIterator::into_iter(v)` for us (syntatic sugar).
+ - *Answer*: `IntoIterator` trait with `into_iter()` method. `for` loop invokes `IntoIterator::into_iter(v)` for us (syntatic sugar).
 
 * Converting from an iterator to a collection with `FromIterator` trait with one method `from_iter`:
 
