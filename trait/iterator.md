@@ -67,7 +67,7 @@ Let's impl `Add` behaviour for `i32`; i.e. `1 + "2" = 3`
     - Mechanism is through `Trait object` i.e. a *trait behind a pointer* (type erasure). Stores any value that impl the trait.
     - [Example cont.](https://play.rust-lang.org/?gist=2b0ad49fe55654dda3ef7e54ec6ce658&version=stable)
 
-Needs a separate presentation!
+Needs a *separate* presentation!
 
 ### Iterator
 
@@ -87,19 +87,19 @@ pub trait Iterator {
     1. A `struct State` holding iterator's state
     2. `impl Iterator for State`
 
-[Exercise](https://play.rust-lang.org/?gist=d7ea3e8f3c03e6c19f6fc37ea8eb99f1&version=stable): create empty iterator. An iterator returning `None` ([Solution](https://play.rust-lang.org/?gist=adf9b7360ee3ee008ee6840401172598&version=stable))
+[Exercise](https://play.rust-lang.org/?gist=84c7b15a8db25dfb020a8ee9762ede75&version=stable): create empty iterator. An iterator returning `None`. Can you make it generic? ([Solution](https://play.rust-lang.org/?gist=adf9b7360ee3ee008ee6840401172598&version=stable))
 
 [Exercise](https://play.rust-lang.org/?gist=6888e2c75ef6a4ec08e61c6ab3d752a4&version=stable): create `repeat` function ([Solution](https://play.rust-lang.org/?gist=a1679f3bb0a1bb3fb7440a0369676d6d&version=stable))
 
 * `for elt in iterator`
 ```Rust
 let v = vec![1, 2, 3];
-for elt in v {
-    println!("{}", elt);
-}
+for elt in v { // consumes v: 1, 2, 3}
+for elt in &v { // &1, &2, &3 }
+for elt in &mut v { // &mut 1, &mut 2, &mut 3 }
 ```
-* We haven't called anything on `v`. How did `for` make `v` into an iterator?
-    - *Answer*: `IntoIterator` trait with `into_iter()` method. `for` loop invokes `IntoIterator::into_iter(v)` for us (syntatic sugar).
+* We haven't called anything on `v` (`&v`, `&mut v`). How did `for` make `v` into an iterator?
+    - *Answer*: `IntoIterator` trait with `into_iter()` method. `for` loop invokes `IntoIterator::into_iter(v)` for us (syntatic sugar). More later!
 
 * Converting from an iterator to a collection with `FromIterator` trait with one method `from_iter`:
 
@@ -131,3 +131,11 @@ where
 * std lib: [`impl<I: Iterator> IntoIterator for I`](https://doc.rust-lang.org/src/core/iter/traits.rs.html#252) means all `Iterator`s are `IntoIterator`s!
     1. Exactly for this reason impling `Iterator` trait for a type, can use it with `for` loop
     2. For a collection with impled `IntoIterator` allows us to use it with `for` loop
+
+[Hard exercise](https://play.rust-lang.org/?gist=f31bbdc777f6a4168e6804e2a4678fbe&version=stable): impl various iterators for Stack ([Solution](https://play.rust-lang.org/?gist=a399db40d4edb5c1eacbef9483fcbe65&version=stable))
+
+### Resources
+
+* [Rust book(s)](https://doc.rust-lang.org/book/)
+* [TMLL](http://cglab.ca/~abeinges/blah/too-many-lists/book/)
+* [Iteration patterns for Result & Option](http://xion.io/post/code/rust-iter-patterns.html)
