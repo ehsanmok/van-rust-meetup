@@ -1,6 +1,6 @@
 Iterator
 ---
-Author: [Ehsan M. Kermani](https://ehsanmkermani.com/)
+*Author*: [Ehsan M. Kermani](https://ehsanmkermani.com/)
 
 Date: April 4th, 2018
 
@@ -26,11 +26,7 @@ impl Debug for Int {...}
 ```
 
 * Can have default impls. Examples: `Clone` above,
-```Rust
-pub trait Default {
-    fn default() -> Self;
-}
-```
+
 * Type bounds over generics tells compiler to check for defined behaviours (impled traits)
     - `struct Int<T: Copy>(T)`
 * *Associate types*: placeholder for trait definition.
@@ -88,10 +84,10 @@ pub trait Iterator {
 * [iter() vs. iter_mut() vs. into_iter()](https://play.rust-lang.org/?gist=9c96353d5047d499cb6c1bbcef725efe&version=stable)
 
 * Create iterator in two steps:
- 1. A `struct State` holding iterator's state
- 2. `impl Iterator for State`
+    1. A `struct State` holding iterator's state
+    2. `impl Iterator for State`
 
-[Exercise](https://play.rust-lang.org/?gist=d7ea3e8f3c03e6c19f6fc37ea8eb99f1&version=stable): create empty iterator. An iterator returning nothing ([Solution](https://play.rust-lang.org/?gist=adf9b7360ee3ee008ee6840401172598&version=stable))
+[Exercise](https://play.rust-lang.org/?gist=d7ea3e8f3c03e6c19f6fc37ea8eb99f1&version=stable): create empty iterator. An iterator returning `None` ([Solution](https://play.rust-lang.org/?gist=adf9b7360ee3ee008ee6840401172598&version=stable))
 
 [Exercise](https://play.rust-lang.org/?gist=6888e2c75ef6a4ec08e61c6ab3d752a4&version=stable): create `repeat` function ([Solution](https://play.rust-lang.org/?gist=a1679f3bb0a1bb3fb7440a0369676d6d&version=stable))
 
@@ -133,6 +129,5 @@ where
 * Associated `type IntoIter` is responsible for holding the state.
     - Example [`vec::IntoIter` struct](https://doc.rust-lang.org/std/vec/struct.IntoIter.html)
 * std lib: [`impl<I: Iterator> IntoIterator for I`](https://doc.rust-lang.org/src/core/iter/traits.rs.html#252) means all `Iterator`s are `IntoIterator`s!
-
- 1. Exactly for this reason impling `Iterator` trait for a type, can use it with `for` loop
- 2. For a collection with impled `IntoIterator` allows us to use it with `for` loop
+    1. Exactly for this reason impling `Iterator` trait for a type, can use it with `for` loop
+    2. For a collection with impled `IntoIterator` allows us to use it with `for` loop
