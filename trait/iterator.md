@@ -42,7 +42,7 @@ impl Debug for Int {...}
     - Example, `Add<RHS=Self>`
 
 [Exercise](https://play.rust-lang.org/?gist=2fe72ad5dcce27ae13a4c61aa14c7097&version=stable):
-Let's impl `Add` behaviour for `i32`; i.e. `1 + "2" = 3`
+Let's impl `Add` for `Int` i.e. `Int + Int`, `Int + String` and `Int + &str`
 ([Solution](https://play.rust-lang.org/?gist=5b97709bf20cd63876ddbe8f3414ce99&version=stable))
 
 * Sub-behaviour (customized): `traits: super_trait`. Example
