@@ -2,7 +2,7 @@ Iterator
 ---
 *Author*: [Ehsan M. Kermani](https://ehsanmkermani.com/)
 
-Date: April 4th, 2018
+*Date: April 4th, 2018*
 
 ### Quick recap of traits
 
@@ -29,6 +29,7 @@ impl Debug for Int {...}
 
 * Type bounds over generics tells compiler to check for defined behaviours (impled traits)
     - `struct Int<T: Copy>(T)`
+
 * *Associate types*: placeholder for trait definition.
     - Example, `type Item` in `Iterator` or `type Output` in `Add`
     ```Rust
@@ -59,7 +60,7 @@ Let's impl `Add` for `Int` i.e. `Int + Int`, `Int + String` and `Int + &str`
 
 * Trait static dispatch: (impled a trait for multiple types)
     - Callee is known at compile time
-    - Monomorphisation
+    - Monomorphization
     - [Example from the book](https://play.rust-lang.org/?gist=fa9a2dbd70cb6c0a0be98a0bb6377c59&version=stable)
 
 * Dynamic dispatch:
@@ -89,7 +90,7 @@ pub trait Iterator {
 
 [Exercise](https://play.rust-lang.org/?gist=84c7b15a8db25dfb020a8ee9762ede75&version=stable): create empty iterator. An iterator returning `None`. Can you make it generic? ([Solution](https://play.rust-lang.org/?gist=adf9b7360ee3ee008ee6840401172598&version=stable))
 
-[Exercise](https://play.rust-lang.org/?gist=6888e2c75ef6a4ec08e61c6ab3d752a4&version=stable): create `repeat` function ([Solution](https://play.rust-lang.org/?gist=a1679f3bb0a1bb3fb7440a0369676d6d&version=stable))
+[Exercise](https://play.rust-lang.org/?gist=6888e2c75ef6a4ec08e61c6ab3d752a4&version=stable): create `repeat` iterator ([Solution](https://play.rust-lang.org/?gist=a1679f3bb0a1bb3fb7440a0369676d6d&version=stable))
 
 * `for elt in iterator`
 ```Rust
@@ -132,7 +133,7 @@ where
     1. Exactly for this reason impling `Iterator` trait for a type, can use it with `for` loop
     2. For a collection with impled `IntoIterator` allows us to use it with `for` loop
 
-[Hard exercise](https://play.rust-lang.org/?gist=f31bbdc777f6a4168e6804e2a4678fbe&version=stable): impl various iterators for Stack ([Solution](https://play.rust-lang.org/?gist=a399db40d4edb5c1eacbef9483fcbe65&version=stable))
+[Challenging exercise](https://play.rust-lang.org/?gist=f31bbdc777f6a4168e6804e2a4678fbe&version=stable): impl various iterators for Stack i.e. impl methods `iter`, `iter_mut` and `IntoIterator` to pass all the tests ([Solution](https://play.rust-lang.org/?gist=a399db40d4edb5c1eacbef9483fcbe65&version=stable))
 
 ### Resources
 
