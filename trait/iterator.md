@@ -7,7 +7,7 @@ Iterator
 ### Quick recap of traits
 
 * Defining *shared behaviour* (interface).
- * Examples: `Clone, Copy, Debug, Display, Drop` and `Iterator`
+    - Examples: `Clone, Copy, Debug, Display, Drop` and `Iterator`
 * For trivial constructs compiler can impl them for us with `#[derive(...)]`. Iterating is *not* trivial!
 
 ```rust
