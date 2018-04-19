@@ -26,6 +26,8 @@ pub trait Fn<Args>: FnMut<Args> { ... }
     - `FnOnce`: consumes the variables it captures from its enclosing scope (environment)
     - `FnMut`: can mutate the environment it was mutably borrowd
     - `Fn`: borrows values from its environment immutably
+
+
 * Rust *infers* which trait to use based on how the closure uses the values from the environment
 * Use `move` to force the closure to take ownership of the values from the environment
 * Create costum closure-like type ([unstable fn_traits](https://doc.rust-lang.org/1.24.1/unstable-book/library-features/fn-traits.html)) [ example](https://play.rust-lang.org/?gist=249e4c7bd2da91fb4e88f36624fb45f6&version=nightly) using [`extern "rust-call" fn`](https://doc.rust-lang.org/1.17.0/src/core/ops.rs.html#2599). More on signature later!
