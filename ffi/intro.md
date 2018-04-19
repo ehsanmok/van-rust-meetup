@@ -24,7 +24,7 @@ pub trait FnMut<Args>: FnOnce<Args> { ... }
 pub trait Fn<Args>: FnMut<Args> { ... }
 ```
     - `FnOnce`: consumes the variables it captures from its enclosing scope (environment)
-    - `FnMut`: can mutate the environment it was mutably borrowd
+    - `FnMut`: can mutate the environment it was mutably borrowed
     - `Fn`: borrows values from its environment immutably
 
 
@@ -43,7 +43,7 @@ pub trait Fn<Args>: FnMut<Args> { ... }
     ```
     - Casting closures (that *don't* capture an environment)
     ```Rust
-    fn clos_ptr: fn(i32) -> i32 = |x| x + 1;
+    let clos_ptr: fn(i32) -> i32 = |x| x + 1;
     ```
     - [Function pointer is 8 bytes!](https://play.rust-lang.org/?gist=73dcfe38467ae201c223d277bc51203f&version=stable)
 
@@ -82,7 +82,7 @@ pub trait Fn<Args>: FnMut<Args> { ... }
     }
     ```
     - [Example](https://github.com/ehsanmok/van-rust-meetup/tree/master/ffi/basic)
-    - Enforce interoperability with the same representation/layout through `#[repr(C)]` (though it is pretty close to `#[repr(Rust)]`)
+    - Enforce interoperability with the same representation/layout through `#[repr(C)]` (close to `#[repr(Rust)]`)
         ```rust
         #[repr(C)]
         struct S { x: i32 }

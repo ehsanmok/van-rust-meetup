@@ -6,11 +6,9 @@ extern "C" {
 }
 
 pub fn c_abs(input: i32) -> i32 {
-    unsafe {
-        let ret = abs(input);
-        println!("calling abs of {input} from C: {ret}", input=input, ret=ret);
-        ret
-    }
+    let ret = unsafe { abs(input) } ;
+    println!("calling abs of {input} from C: {ret}", input=input, ret=ret);
+    ret
 }
 
 // expose rust_abs (which calls C abs for fun!) to C
