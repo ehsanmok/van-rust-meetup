@@ -89,13 +89,12 @@ NOTE: you can only `#[macro_use]` an external crate from the root module.
 #[macro_export]
 macro_rules! as_expr {
     ($e:expr) => { $e }
-    }
 }
 
 #[macro_export]
 macro_rules! foo {
     ( $($tts:tt)* ) => {
-        foo!(as_expr!($($tts)*)) // For the sake of example! does NOT compile though
+        foo!(as_expr!($($tts)*)) // for the sake of example
     }
 }
 ```
