@@ -1,0 +1,30 @@
+[package]
+name = "criterion-demo"
+version = "0.1.0"
+authors = ["oddg <odegevigney@gmail.com>"]
+# Benchmarks are not automatically run with the tests
+autobenches = false
+
+[dependencies]
+
+[dev-dependencies]
+criterion = "0.2"
+rand = "0.5"
+rayon = "1"
+
+[[bench]]
+# Name of the target
+name = "sequential_vs_random_access"
+
+# Where the crate is located, relative to the `Cargo.toml` file.
+path = "benches/sequential_vs_random_access.rs"
+
+# If set to false, `cargo test` will omit the `--test` flag to rustc, which
+# stops it from generating a test harness. This is useful when the binary being
+# built manages the test runner itself.
+harness = false
+
+[[bench]]
+name = "vec_vs_matrix"
+path = "benches/vec_vs_matrix.rs"
+harness = false
