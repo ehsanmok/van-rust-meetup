@@ -83,7 +83,7 @@ Closure
     println!("{:?}", x);  --> use of moved value
 ```
 
-#### How does compiler does the capture given some rules?
+#### How does compiler do the capture given some rules?
 
 [Exercise](https://play.rust-lang.org/?gist=0d9739dc4dcb2b22e86edb0819c741c9): Try to emulate `map` on `Option<T> -> Option<U>` like
 ```rust
