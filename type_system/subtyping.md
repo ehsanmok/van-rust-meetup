@@ -56,14 +56,17 @@ pub struct UnsafeCell<T: ?Sized> {
 ```
 What just happened? what is the difference? :confused:
 
-First some background.
+First some background
 
 * Unsafe is dark!
 * Lifetime is a *region of code*. Lifetime parameter `'a` *behaves like a type*.
-* For a type `T`, we know that `&static T` outlives (a generic) `&'a T`, therefore, `&static T <: &'a T`
-* In general, if `'b: 'a` (i.e. `'b` outlives `'a` and pedagogically, we write code from left to right so larger lifetime would encompass smaller ones), then `&'b T <: &'a T`, i.e. *co-variant*. More general, for `'b: 'a` and `S <: T` then `&'b S <: &'a T`.
-* [What about `&mut`?](https://play.rust-lang.org/?version=stable&mode=debug&edition=2015&gist=d18b09887c5a8748397c617a9e7878e6)
-* Therefore, `&'a mut &'static T` is NOT a subtype of `&'a mut &'a T`. In fact, `&mut` is *in-variant* (no variant relation) wrt general subtyping `S <: T`. But it is ONLY valid when **`S` exactly `T`** i.e. `&'b mut T <: &'a mut T` for `'b:'a`. :sleeping:
+* For a type `T`, we know that `&'static T` outlives (a generic) `&'a T`, therefore, `&'static T <: &'a T`
+* In general, if `'b: 'a` (i.e. `'b` outlives `'a` and pedagogically, we write code from left to right so larger lifetime would encompass smaller ones), then `&'b T <: &'a T`, i.e. *co-variant*. More general, 
+    
+    for `'b: 'a` and `S <: T` then `&'b S <: &'a T`.
+
+* [What about `&mut 'b S <: &mut 'a T`?](https://play.rust-lang.org/?version=stable&mode=debug&edition=2015&gist=57c1fb29a902cb166c5730775c04d45a)
+* Therefore, `&'a mut &'static T` is NOT a subtype of `&'a mut &'a T`. In fact, `&mut` is *in-variant* (no variant relation) wrt general subtyping `S <: T`. But it is ONLY valid when **`S` is exactly equal to `T`** i.e. `&'b mut T <: &'a mut T` for `'b:'a`. :sleeping:
 
 > The problem with making `&mut T` covariant over `T` is that it gives us the power to modify the original value when *we don't remember all of its constraints*. [[Rustonomicon](https://doc.rust-lang.org/nomicon/subtyping.html#variance)]
 
@@ -72,7 +75,9 @@ First some background.
     * `&mut 'a T` is covariant wrt `'a` and invariant wrt `T`.
 * Checkout the complete variance table [here](https://doc.rust-lang.org/nomicon/subtyping.html#variance).
 
-Back to the question; `UnsafeCall<T>` is **invariant** wrt `T` ([deep root in compiler with #[lang = "unsafe_cell"]](https://users.rust-lang.org/t/why-unsafecell-t-is-invariant-wrt-t/24926)), so is `Cell`. But our own `MyCell<T>` is covariant wrt `T` meaning `&mut` becomes dangerous :scream: :skull:
+Answer to the above question:
+
+`UnsafeCall<T>` is **invariant** wrt `T` ([deep root in compiler with #[lang = "unsafe_cell"]](https://users.rust-lang.org/t/why-unsafecell-t-is-invariant-wrt-t/24926)), so is `Cell`. But our own `MyCell<T>` is *covariant* wrt `T` which means mutation won't remember all the constraints so it becomes dangerous :scream: :skull:
 
 ## How to derive variance of a type?
 
@@ -80,13 +85,13 @@ Let `F` be a type constructor and `S <: T` then `F` is
 * **Co-variant** iff `F<S> <: F<T>` (example: function return type, `&T`, `*const T`, `Vec<T>`).
 * **Contra-variant** iff `F<T> <: F<S>` (example: function argument type)
 * **In-variant** iff there's no subtyping relation (example:`&mut T`, `*mut T`, `UnsafeCell<T>`, `Cell<T>`).
-* **Bi-variant** iff it's *both* covariant and contravariant i.e. generic parameter is not used (example: built-in type contructors `i32`, `bool`, `str`, `extern type` etc).
+* **Bi-variant** iff it's *both* covariant and contravariant i.e. generic parameter is not used (example: builtin type contructors `i32`, `bool`, `str`, [`extern type (different from `extern fn`)`](https://github.com/rust-lang/rust/pull/44295), but not `fn` though).
 
 ### Variance algebra :ghost:
 
-* Let `0, +, -, ∞` correspond to invariance, covariance, contravariance and bivariace, respectively. Then
+* Let `0, +, -, ∞` correspond to in-variance, co-variance, contra-variance and bi-variance, respectively. Then
 
-* [**Transform**](https://doc.rust-lang.org/nightly/nightly-rustc/rustc/ty/enum.Variance.html#method.xformhttps://doc.rust-lang.org/nightly/nightly-rustc/rustc_typeck/variance/xform/fn.glb.html) (denoted by `x` below): for type composition (example: `fn(Vec<T>)`)
+* [**Transform**](https://doc.rust-lang.org/nightly/nightly-rustc/rustc/ty/enum.Variance.html#method.xformhttps://doc.rust-lang.org/nightly/nightly-rustc/rustc_typeck/variance/xform/fn.glb.html) (denoted by `x` below): for **type composition** (example: `fn(Vec<T>)`)
 
 | x | 0 | + | - | ∞ |
 |---|---|---|---|---|
@@ -95,7 +100,7 @@ Let `F` be a type constructor and `S <: T` then `F` is
 | - | 0 | - | + | ∞ |
 | ∞ | ∞ | ∞ | ∞ | ∞ |
 
-* [**Greatest lower bound**](https://doc.rust-lang.org/nightly/nightly-rustc/rustc_typeck/variance/xform/fn.glb.html) (denote by `^` bellow): for type aggregates (example: *struct, tuple, enum and union*)
+* [**Greatest lower bound**](https://doc.rust-lang.org/nightly/nightly-rustc/rustc_typeck/variance/xform/fn.glb.html) (denote by `^` bellow): for **type aggregates** (example: *struct, tuple, enum, union and [`fn`](https://users.rust-lang.org/t/variance-of-extern-fn-vs-fn/25013/8?u=ehsanmok)* actually)
 
 | ^ | 0 | + | - | ∞ |
 |---|---|---|---|---|
@@ -104,7 +109,7 @@ Let `F` be a type constructor and `S <: T` then `F` is
 | - | 0 | 0 | - | - |
 | ∞ | 0 | + | - | ∞ |
 
-More details, see [rustc::ty::Variance](https://doc.rust-lang.org/nightly/nightly-rustc/rustc/ty/enum.Variance.html).
+More details, see [Taming the Wildcards: Combining Definition and Use-Site Variance](https://people.cs.umass.edu/~yannis/variance-extended2011.pdf) (implemented in [`rustc::ty::Variance`](https://doc.rust-lang.org/nightly/nightly-rustc/rustc/ty/enum.Variance.html))
 
 #### Exercise :wink:
 
@@ -114,8 +119,8 @@ Use the Variance algebra and derive the following
 2. Show that `*mut Vec<T>` is invariant wrt `T` and the same holds for `*mut Vec<i32>`.
 3. Show that `fn(Box<&'a T>)` is contravariant wrt `'a` and `T`.
 4. Prove that `Vec<T>` is covariant wrt `T` ([hint](https://github.com/rust-lang/rust/blob/master/src/liballoc/raw_vec.rs)).
-5. Show that `extern fn(&'a [T]) -> Result<U>` is contravariant wrt `'a` and `T` and covariant wrt `U`.
-6. Show that `PhantomData<fn(T) -> T>` is invariant wrt `T`.
+5. Show that `fn(&'a [T]) -> Result<U>` is contravariant wrt `'a` and `T` and covariant wrt `U`. (the same for `extern fn` [hint](https://users.rust-lang.org/t/variance-of-extern-fn-vs-fn/25013/8?u=ehsanmok))
+6. Show that `PhantomData<fn(T) -> T>` is invariant wrt `T`. (one can fix our `MyCell` example by adding this or any invariant type!)
 
 ### Inner working of Variance :relieved:
 
@@ -130,7 +135,7 @@ Earlier we observed that `&Vec<i32> <: &[i32]` and `&mut Vec<i32> <: &mut [i32]`
 ### Resources :smile:
 
 * [Rustonomicon](https://doc.rust-lang.org/stable/nomicon/subtyping.html)
-* [(Video presentation) Felix Klock - Subtyping in Rust and Clarke's Third Law](https://www.youtube.com/watch?v=fI4RG_uq-WU), [slides](http://pnkfx.org/presentations/rustfest-berlin-2016/slides.html)
+* My inspiration for this presentation comes from [(Video presentation) Felix Klock - Subtyping in Rust and Clarke's Third Law](https://www.youtube.com/watch?v=fI4RG_uq-WU), and examples in [slides](http://pnkfx.org/presentations/rustfest-berlin-2016/slides.html)
 * [Variance in Rust](https://medium.com/@kennytm/variance-in-rust-964134dd5b3e)
 * [Undestanding lifetime](https://medium.com/nearprotocol/understanding-rust-lifetimes-e813bcd405fa)
 * [Subtyping and coercion in Rust](http://featherweightmusings.blogspot.com/2014/03/subtyping-and-coercion-in-rust.html)
