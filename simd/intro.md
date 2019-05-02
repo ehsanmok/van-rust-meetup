@@ -87,7 +87,7 @@ fn foo() {
 * Plain:
 
 ```rust
-fn inner_product(a: &[f32], b: &[f32]) -> &[f32] {
+fn inner_product(a: &[f32], b: &[f32]) -> f32 {
     assert_eq!(a.len(), b.len());
     let mut ret = 0.f32;
     for i in (0..a.len()) {
@@ -96,7 +96,7 @@ fn inner_product(a: &[f32], b: &[f32]) -> &[f32] {
     ret
 }
 
-fn functional_inner_product(a: &[f32], b: &[f32]) -> &[f32] {
+fn functional_inner_product(a: &[f32], b: &[f32]) -> f32 {
     assert_eq!(a.len(), b.len());
     a.iter().zip(b.iter()).map(|(x, y)| x * y).sum()
 }
@@ -107,7 +107,7 @@ fn functional_inner_product(a: &[f32], b: &[f32]) -> &[f32] {
 ```rust
 use packed_simd::f32x4;
 
-fn inner_product(a: &[f32], b: &[f32]) -> &[f32] {
+fn inner_product(a: &[f32], b: &[f32]) -> f32 {
     assert_eq!(a.len(), b.len());
     assert!(a.len() % 4 == 0); // otherwise `from_slice_unaligned` will panic!
 
@@ -120,7 +120,7 @@ fn inner_product(a: &[f32], b: &[f32]) -> &[f32] {
     ret.sum()
 }
 
-fn functional_inner_product(a: &[f32], b: &[f32]) -> &[f32] {
+fn functional_inner_product(a: &[f32], b: &[f32]) -> f32 {
     assert_eq!(a.len(), b.len());
     assert!(a.len() % 4 == 0);
 
